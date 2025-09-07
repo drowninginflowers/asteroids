@@ -1,6 +1,7 @@
 from circleshape import CircleShape
-from constants import ASTEROID_COLOR
+from constants import ASTEROID_COLOR, ASTEROID_MIN_RADIUS
 import pygame
+import random
 
 
 class Asteroid(CircleShape):
@@ -12,3 +13,16 @@ class Asteroid(CircleShape):
 
     def draw(self, screen):
         pygame.draw.circle(screen, ASTEROID_COLOR, self.position, self.radius, 2)
+
+    def split(self):
+        self.kill()
+        if self.radius <= ASTEROID_MIN_RADIUS:
+            return
+        angle = random.uniform(20, 50)
+        v1 = self.velocity.rotate(angle) * 1.1
+        v2 = self.velocity.rotate(-angle) * 1.1
+        new_radius = self.radius - ASTEROID_MIN_RADIUS
+        a1 = Asteroid(self.position.x, self.position.y, new_radius)
+        a2 = Asteroid(self.position.x, self.position.y, new_radius)
+        a1.velocity = v1
+        a2.velocity = v2
